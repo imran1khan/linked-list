@@ -1,0 +1,248 @@
+//doubly linked list
+#include<iostream>
+#include<algorithm>
+using namespace std;
+class Node
+{
+public:
+	int value = 0;
+	Node* next = NULL;
+	Node * previous = NULL;
+	Node() {}
+	Node(int value) 
+	{
+		this->value = value;
+		this->next = NULL;
+		this->previous = NULL;
+	}
+	~Node() {}
+
+private:
+
+};
+class Dlinkedlist:protected Node
+{
+public:
+	void printlist()
+	{
+		if (head==NULL)
+		{
+			cout << "\nempty-list\n";
+			return;
+		}
+		Node* current = head;
+		cout << "NULL<-";
+		while (current!=NULL)
+		{
+			cout << current->value << "->";
+			current = current->next;
+		}
+		cout << "NULL";
+	}
+	void insert_node_at_the_end(int val) 
+	{
+		Node* newnode = new Node(val);
+		if (head==NULL)
+		{
+			head = newnode;
+			head->next = NULL;
+			head->previous = NULL;
+			return;
+		}
+		Node* current = head;
+		Node* prevptr = NULL;
+		while (current!=NULL)
+		{
+			prevptr = current;
+			current = current->next;
+		}
+		prevptr->next = newnode;
+		newnode->previous = prevptr;
+	}
+	void insert_node_at_the_bignning(int val)
+	{
+		Node* newnode = new Node(val);
+		if (head==NULL)
+		{
+			head = newnode;
+			head->next = NULL;
+			head->previous = NULL;
+			return;
+		}
+		head->previous = newnode;
+		newnode->next = head;
+		newnode->previous = NULL;
+		head = newnode;
+	}
+	void insert_Node_at_position(int position,int val) 
+	{
+		Node* newnode = new Node(val);
+		if (head==NULL)
+		{
+			head = newnode;
+			return;
+		}
+		Node* pptr = head;
+		for (int i = 1; i <= position; i++)
+		{
+			if(i==1 && position==1)
+			{
+				newnode->next = head;
+				head->previous = newnode;
+				head = newnode;
+				return;
+			}
+			else
+			{
+				if (i==position-1 && pptr!=NULL)
+				{
+					newnode->next = pptr->next;
+					newnode->previous = pptr;
+					pptr->next = newnode;
+					return;
+				}
+				else
+				{
+					pptr = pptr->next;
+					if (pptr==NULL)
+					{
+						return;
+					}
+				}
+			}
+		}
+	}
+	void printReverseLinkedlist() 
+	{
+		if (head==NULL)
+		{
+			cout << "\nempty-list\n";
+			return;
+		}
+		Node* lptr = head;
+		while (lptr->next!=NULL)
+		{
+			lptr = lptr->next;
+		}
+		cout << "NULL<-";
+		while (lptr!=NULL)
+		{
+			cout << lptr->value << "->";
+			lptr = lptr->previous;
+		}
+		cout << "NULL";
+	}
+	void deleteNodeFirst()
+	{
+		if (head==NULL)
+		{
+			return;
+		}
+		Node* temp = head;
+		head = head->next;
+		delete temp;
+	}
+	void deleteNodeLast() 
+	{
+		if (head==NULL)
+		{
+			return;
+		}
+		if (head->next==NULL)
+		{
+			Node* t = head;
+			head = NULL;
+			delete t;
+			return;
+		}
+		Node* temp = head;
+		while (temp->next->next!=NULL)
+		{
+			temp = temp->next;
+		}
+		Node* temp2 = temp->next;
+		temp->next = NULL;
+		delete temp2;
+	}
+	void sortlist() 
+	{
+		if (head==NULL || head->next==NULL)
+		{
+			return;
+		}
+		Node* preptr = head;
+		while (preptr!=NULL)
+		{
+			Node* cptr = preptr->next;
+			while (cptr!=NULL)
+			{
+				if (preptr->value > cptr->value)
+				{
+					swap(preptr->value,cptr->value);
+				}
+				cptr = cptr->next;
+			}
+			preptr = preptr->next;
+		}
+	}
+	void ReverseLinkedlist()
+	{
+		if (head==NULL || head->next==NULL)
+		{
+			return;
+		}
+		Node* current = head;
+		Node* newhead = NULL;
+		Node* swaptemp = NULL;
+		while (current!=NULL)
+		{
+			swaptemp = current->previous;
+			current->previous = current->next;
+			current->next = swaptemp;
+			newhead = current;
+			current = current->previous;
+		}
+		head = newhead;
+		//head = swaptemp->previous;// i did't understand this one
+	}
+	Dlinkedlist () 
+	{
+		this->head = NULL;
+	}
+	~Dlinkedlist() {}
+
+private:
+	Node* head=NULL;
+};
+int main()
+{
+	Dlinkedlist a;
+	//for (int i = 5; i >= 1; i--)
+	//{
+	//	a.insert_node_at_the_bignning(i);
+	//}
+	for (int i = 1; i <= 10; i++)
+	{
+		a.insert_node_at_the_bignning(i);
+	}
+	//for (int i = 1; i <= 5; i++)
+	//{
+	//	a.insert_node_at_the_end(i);
+	//}
+	a.printlist();
+	cout << endl;
+	//for (int i = 1; i <= 1; i++)
+	//{
+	//	a.deleteNodeFirst();
+	//}
+	//for (int i = 1; i <= 5; i++)
+	//{
+	//	a.deleteNodeLast();
+	//}
+	//a.sortlist();
+	//a.insert_Node_at_position(7,22);
+	//a.printReverseLinkedlist();
+	//cout << endl;
+	a.ReverseLinkedlist();
+	a.printlist();
+}
