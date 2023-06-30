@@ -1,0 +1,417 @@
+#include<iostream>// there are two ways to make a circular linked list
+using namespace std;// both of them are very similar except some few points
+class Node			// this one is by using the head ponter as the base and the outher one is by using the last node as the base
+{
+public:
+	int value = 0;
+	Node* next = NULL;
+	Node(int value) // constroctor with value
+	{
+		this->value = value;
+		this->next = NULL;
+	}
+	Node() {}// constroctor without value
+	~Node() 
+	{
+		//int value = this->value;// this is wrong ask this to the master
+		//if (this->next!=NULL)
+		//{
+		//	delete this->next;
+		//	next = NULL;
+		//}
+	}
+protected:
+private:
+};
+
+class Clinkedlist:protected Node
+{
+public:
+	void insert_fisrt_diffrent_method(int value)
+	{
+		Node* newnode = new Node();
+		if (head==NULL)
+		{
+			head = newnode;
+			head->value = value;
+			head->next = head;
+			return;
+		}
+		else
+		{
+			newnode->value = head->value;
+			newnode->next = head->next;
+			head->next = newnode;
+			head->value = value;
+		}
+	}
+	void insert_at_first(int val)//
+	{
+		Node* newnode = new Node(val);
+		if (head==NULL)
+		{
+			head = newnode;
+			head->next = head;
+			return;
+		}
+		Node* temp = head->next;
+		while (temp->next!=head)
+		{
+			temp = temp->next;
+		}
+		temp->next = newnode;
+		newnode->next = head;
+		head = newnode;
+	}
+	void insert_last_different_method(int value)
+	{
+		Node* newnode = new Node();
+		if (head==NULL)
+		{
+			head = newnode;
+			head->value = value;
+			head->next = head;
+		}
+		else
+		{
+			newnode->next = head->next;
+			newnode->value = head->value;
+			head->next = newnode;
+			head->value = value;
+			head = newnode;
+		}
+	}
+	void insert_at_last(int val)
+	{
+		Node* newnode = new Node(val);
+		if (head==NULL)
+		{
+			head = newnode;
+			head->next = head;
+			return;
+		}
+		Node* current = head;
+		while (current->next!=head)
+		{
+			current = current->next;
+		}
+		newnode->next = current->next;
+		current->next = newnode;
+	}
+	void insert_at_position(int value,int k)
+	{
+		Node* newnode = new Node(value);
+		Node* previous = head;
+		Node* current = head->next;
+		for (int i = 1; i <= k; i++)
+		{
+			if ((i==1 && k==1) || head==NULL)
+			{
+				insert_at_first(value);
+				return;
+			}
+			else
+			{
+				if (i==k-1)
+				{
+					newnode->next=previous->next;
+					previous->next = newnode;
+				}
+				else
+				{
+					current = current->next;
+					previous = previous->next;
+					if (previous==head)
+					{
+						return;
+					}
+				}
+			}
+		}
+		return;
+	}
+	void delete_first() 
+	{
+		if (head==NULL)
+		{
+			return;
+		}
+		if (head->next==head)
+		{
+			Node* temp = head;
+			head = NULL;
+			delete temp;
+			return;
+		}
+		head->value = head->next->value;
+		Node* temp = head->next;
+		head->next = head->next->next;
+		delete temp;
+	}
+	void delete_fast_different_method()
+	{
+		if (head == NULL)
+		{
+			return;
+		}
+		if (head->next == head)// these two if condition are going to be the same
+		{
+			Node* temp = head;
+			head = NULL;
+			delete temp;
+			return;
+		}
+		Node* current = head;// but from here we are taking different wat ti delete the first node;
+		while (current->next!=head)
+		{
+			current = current->next;
+		}
+		Node* temp = current->next;
+		current->next = head->next;
+		head = head->next;
+		delete temp;
+	}
+	void delete_last()
+	{
+		if (head==NULL)
+		{
+			return;
+		}
+		if (head->next==head)
+		{
+			Node* temp = head;
+			head = NULL;
+			delete temp;
+			return;
+		}
+		Node* prevoius = NULL;
+		Node* current = head;
+		do
+		{
+			prevoius = current;
+			current = current->next;
+		} while (current->next!=head);
+		prevoius->next = current->next;
+		delete current;
+	}
+	void delete_value_node(int keyval)
+	{
+		if (head==NULL)
+		{
+			return;
+		}
+		if (head->next==head && head->value==keyval)
+		{
+			Node* temp = head;
+			head = NULL;
+			delete temp;
+			return;
+		}
+		if (head->next == head && head->value != keyval)
+		{
+			return;
+		}
+		if (keyval==head->value)
+		{
+			Node* temp = head->next;
+			head->value = head->next->value;
+			head->next = head->next->next;
+			delete temp;
+			return;
+		}
+		Node* previous = head;
+		while (previous->next!=head)
+		{
+			if (previous->next->value==keyval)
+			{
+				Node* temp = previous->next;
+				previous->next = previous->next->next;
+				delete temp;
+				return;
+			}
+			previous = previous->next;
+		}
+	}
+	int list_lenght()
+	{
+		if (head==NULL)
+		{
+			return 0;
+		}
+		else
+		{
+			Node* temp = head;
+			int c = 0;
+			do
+			{
+				c++;
+				temp = temp->next;
+			} while (temp!=head);
+			return c;
+		}
+	}
+	void show_list()
+	{
+		if (head==NULL)
+		{
+			cout << "empty list\n";
+			return;
+		}
+		Node* temp = head;
+		do
+		{
+			cout << temp->value << "->";
+			temp = temp->next;
+		} while (temp!=head);
+	}
+	void sort_linklist()
+	{
+		if (head==NULL || head->next==head)
+		{
+			return;
+		}
+		Node* previous = head;
+		while (previous->next != head)
+		{
+			Node* current = previous->next;
+			while (current!=head)
+			{
+				if (previous->value>current->value)
+				{
+					swap(previous->value,current->value);
+				}
+				current = current->next;
+			}
+			previous = previous->next;
+		}
+	}
+	void reverse_ll() 
+	{
+		Node* previous = NULL;
+		Node* current = head;
+		do
+		{
+			Node*next = current->next;
+			current->next = previous;
+			previous = current;
+			current = next;
+		} while (current!=head);
+		current->next = previous;
+		head = previous;
+	}
+	void reverse_ll2() 
+	{
+		Node* lptrnull = head;
+		while (lptrnull->next!=head)
+		{
+			lptrnull = lptrnull->next;
+		}
+		lptrnull->next = NULL;
+		///////////
+		Node* previous = NULL;
+		Node* current = head;
+		while (current!=NULL)
+		{
+			Node* next = current->next;
+			current->next = previous;
+			previous = current;
+			current = next;
+		}
+		head->next = previous;
+		head=previous;
+	}
+	void deleteval(int val) 
+	{
+		if (head->next==head || head==NULL)
+		{
+			return;
+		}
+		if (head->value==val)
+		{
+			return;
+		}
+		Node* previous = head;
+		Node* current = head->next;
+		while (current->value!=val && current->next!=head)
+		{
+			previous = previous->next;
+			current = current->next;
+		}
+		if (current->next==head)
+		{
+			return;
+		}
+		if (current->value==val)
+		{
+			Node* temp = previous->next;
+			previous->next = current->next;
+			delete temp;
+			return;
+		}
+	}
+	Clinkedlist() 
+	{
+		head = NULL;
+	}
+	~Clinkedlist() {}
+
+private:
+	Node* head = NULL;
+};
+int main()
+{
+	Clinkedlist a;
+	//a.delete_fast_different_method();
+	//a.show_list();
+	//a.delete_last();
+	//a.show_list();
+	
+	//a.insert_at_first(1);
+	//a.show_list();
+	////a.delete_first();
+	//a.delete_last();
+	//cout << endl;
+	//a.show_list();
+	
+	//a.insert_at_first(2);
+	//a.show_list();
+	//a.delete_fast_different_method(); cout << endl;
+	//a.show_list(); cout << endl;
+	//a.show_list(); cout << endl;
+	//a.delete_last();
+	////a.delete_last();
+	//a.show_list();
+	
+	//a.insert_at_first(3);
+	//a.insert_at_last(4);
+	//a.insert_at_last(5);
+	//a.show_list();
+	//cout << endl;
+	//a.insert_at_position(22,6);
+	//a.show_list();
+	//a.insert_fisrt_diffrent_method(11);
+	//cout << endl;
+	//a.insert_last_different_method(100);
+	//a.insert_last_different_method(7);
+	a.insert_last_different_method(6);
+	a.insert_last_different_method(5);
+	a.insert_last_different_method(4);
+	a.insert_last_different_method(3);
+	a.insert_last_different_method(2);
+	a.insert_last_different_method(1);
+	a.show_list();
+	cout << endl;
+	//a.show_list();
+	//a.delete_last();
+	//cout << endl;
+	//a.delete_fast_different_method();
+	//a.delete_value_node(3);
+	//a.sort_linklist();
+	//a.reverse_ll();
+	//a.reverse_ll2();
+	//a.show_list();
+	//cout << endl;
+	//a.sort_linklist();
+	a.deleteval(7);
+	a.show_list();
+}
