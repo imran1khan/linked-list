@@ -227,6 +227,25 @@ public:
 			}
 		}
 	}
+	void delete_duplicate_in_sortedList()
+	{
+		Node* current = head;
+		do
+		{
+			while (current->value == current->next->value)
+			{
+				Node* temp = current->next;
+				current->next = temp->next;
+				temp->next->previous = current;
+				delete temp;
+				if (current->next==head)
+				{
+					break;
+				}
+			}
+			current = current->next;
+		} while (current!=head);
+	}
 	void sortlist()
 	{
 		if (head==NULL)
