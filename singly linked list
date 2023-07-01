@@ -1,0 +1,413 @@
+#include<iostream>
+using namespace std;
+class Noad
+{
+public:
+	int value = 0;
+	Noad* next = NULL;
+	Noad()//// default constroctor
+	{
+		value = 0;
+		next = NULL;
+	}
+	Noad(int value)// default constroctor with perameters
+	{
+		this->value = value;
+		this->next = NULL;
+	}
+	~Noad()
+	{
+		int value = this->value;
+		if (this->next!=NULL)
+		{
+			delete next;
+			next = NULL;
+		}
+	}
+
+protected:
+
+private:
+
+};
+class Linkedlist:protected Noad //publicaly inhariting the Noad class
+{
+public:
+	void printlist()
+	{
+		Noad* temp = head;
+		while (temp != NULL)
+		{
+			cout << temp->value << "->";
+			temp = temp->next;
+		}cout << "NULL\n";
+	}
+	void insert_noad_at_front(int value)
+	{
+		Noad* newnoad = new Noad(value);
+		if (head==NULL)
+		{
+			head = newnoad;
+			return;
+		}
+		newnoad->next = head;
+		head = newnoad;
+	}
+	void insert_noad_at_last(int value)
+	{
+		Noad* newnoad = new Noad(value);
+		if (head==NULL)
+		{
+			head = newnoad;
+			return;
+		}
+		Noad* temp = head;
+		while (temp->next!=NULL)
+		{
+			temp = temp->next;
+		}
+		temp->next = newnoad;
+		newnoad->next = NULL;
+	}
+	void insert_at_position(int position,int value)
+	{
+		if (position<0)// is position a valid position or not
+		{
+			cout << "invalid address" << endl;
+			return;
+		}
+		if (position == 0 && head != NULL)// is head null or not if not then insert infornt of head
+		{
+			insert_noad_at_front(value);
+			return;
+		}
+		Noad* newnoad = new Noad(value);
+		if (position>=0 && head==NULL)// if head is empty and position is greter the zero the new node is going
+		{							// to become head noad
+			head = newnoad;
+			return;
+		}
+		int count = 0;
+		Noad* temp = head;
+		while (temp->next!=NULL)
+		{
+			count++;
+			temp = temp->next;
+		}
+		if (position==count+1)
+		{
+			delete newnoad;
+			insert_noad_at_last(value);
+			return;
+		}
+		if (position>count)
+		{
+			cout << "invalid address" << endl;
+			delete newnoad;
+			return;
+		}
+		
+		//Noad* temp2 = head;
+		//for (int i = 1; i < position; i++)
+		//{
+		//	temp2 = temp2->next;
+		//}
+		//newnoad->next = temp2->next;
+		//temp2->next = newnoad;
+
+		// different metod to do the same above thing
+		Noad* start = head, * ptr = NULL;
+		if (position>0 && position<=count)
+		{
+			for (int i = 0; i < position; i++)
+			{
+				ptr = start;
+				start = start->next;
+			}
+			newnoad->next = ptr->next;
+			ptr->next = newnoad;
+		}
+	}
+	void sortlist()
+	{
+		if (head==NULL)
+		{
+			cout << "no element found" << endl;
+			return;
+		}
+		Noad* temp = head;
+		while (temp->next!=NULL)
+		{
+			Noad* second = temp->next;
+			while (second!=NULL)
+			{
+				if ((temp->value) > (second->value))
+				{
+					int tempvalue = temp->value;
+					temp->value = second->value;
+					second->value = tempvalue;
+				}
+				second = second->next;
+			}
+			temp = temp->next;
+		}
+	}
+	void delete_first_noad()
+	{
+		if (head==NULL)
+		{
+			cout << "no element found" << endl;
+			return;
+		}
+		Noad* temp = head;
+		head = head->next;
+		delete temp;
+	}
+	void delete_last_noad()
+	{
+		if (head==NULL)
+		{
+			cout << "no elements" << endl;
+			return;
+		}
+		Noad* temp = head,*temp2=NULL;
+		while (temp->next->next!=NULL)
+		{
+			temp = temp->next;
+		}
+		temp2 = temp->next;
+		temp->next = NULL;
+		delete temp2;
+	}
+	void delete_at_position(int position) 
+	{
+		if (head==NULL)
+		{
+			cout << "no element present" << endl;
+			return;
+		}
+		if (position==0)
+		{
+			delete_first_noad();
+			return;
+		}
+		Noad* temp = head;
+		int  count = 0;
+		while (temp!=NULL)
+		{
+			count++;
+			temp = temp->next;
+		}
+		if (position<0 || position>=count)
+		{
+			cout << "invalid position" << endl;
+			return;
+		}
+		Noad* temp2 = head,*pre=NULL;
+		for (int i = 0; i < position; i++)
+		{
+			pre = temp2;
+			temp2 = temp2->next;
+		}
+		//Noad* temp3 = pre->next;
+		pre->next = temp2->next;
+		delete temp2;
+	}
+	void delete_at_alternate_position()
+	{
+		if (head==NULL)
+		{
+			cout << "list is empty" << endl;
+			return;
+		}
+		Noad* current = head;
+		while (current!= NULL && current->next!=NULL)
+		{
+			Noad* temp = current->next;
+			current->next = current->next->next;
+			delete temp;
+			current = current->next;
+		}
+		return;
+	}
+	void delete_all()
+	{
+		int count = 0;
+		Noad* temp = head;
+		if (head==NULL)
+		{
+			return;
+		}
+		while (temp!=NULL)
+		{
+			count++;
+			temp = temp->next;
+		}
+		for (int i = 0; i < count; i++)
+		{
+			delete_first_noad();
+		}
+	}
+	void update_value_at_position(int position,int newvalue)
+	{
+		if (head==NULL)
+		{
+			cout << "list is empty" << endl;
+			return;
+		}
+		Noad* temp = head;
+		int count = 0;
+		while (temp->next!=NULL)
+		{
+			count++;
+			temp = temp->next;
+		}
+		if (position<0 || position>count)
+		{
+			cout << "invalid index" << endl;
+			return;
+		}
+		temp = head;
+		for (int i = 0; i < position; i++)
+		{
+			temp = temp->next;
+		}
+		temp->value = newvalue;
+	}
+	int search_element(int gvalue)
+	{
+		if (head==NULL)
+		{
+			cout << "list is element" << endl;
+			return -1;
+		}
+		Noad* temp = head;
+		int pos = 0;
+		while (temp!=NULL)
+		{
+			if (temp->value==gvalue)
+			{
+				return pos;
+			}
+			pos++;
+			temp = temp->next;
+		}
+		return -1;
+	}
+	int value_at_position(int position)
+	{
+		if (head==NULL)
+		{
+			cout << "kist is empty" << endl;
+			return -1;
+		}
+		Noad* temp = head;
+		int count = 0;
+		while (temp->next!=NULL)
+		{
+			count++;
+			temp = temp->next;
+		}
+		if (position<0 || position>count)
+		{
+			cout << "invalid position" << endl;
+			return -1;
+		}
+		temp = head;
+		int i = 0;
+		while (i<position)
+		{
+			temp = temp->next;
+			i++;
+		}
+		return temp->value;
+	}
+	Linkedlist() // default constroctor
+	{
+		head = NULL;
+	}
+	~Linkedlist() {}
+
+private:
+	Noad* head = NULL;
+};
+
+int main()
+{
+	Linkedlist a;
+	//a.insert_noad_at_front(7);
+	//a.insert_noad_at_front(6);
+	//a.insert_noad_at_front(5);
+	//a.insert_noad_at_front(4);
+	//a.insert_noad_at_front(3);
+	//a.insert_noad_at_front(2);
+	//a.insert_noad_at_front(1);
+	//a.insert_noad_at_front(0);
+	//a.printlist();
+
+	//a.insert_noad_at_last(2);
+	//a.insert_noad_at_last(3);
+	//a.insert_noad_at_last(4);
+
+	//a.insert_at_position(0, 11);
+	//a.printlist();
+	//a.insert_at_position(1,12);
+	//a.insert_at_position(2,212);
+	//a.insert_at_position(3, 200);
+	//a.insert_at_position(4, 300);
+	//a.insert_at_position(-1, 22);
+	
+	//a.insert_at_position();
+
+	a.insert_noad_at_front(10);
+	a.insert_noad_at_front(11);
+	a.insert_noad_at_front(12);
+	a.insert_noad_at_front(13);
+	a.insert_noad_at_front(14);
+	a.insert_noad_at_front(15);
+	a.insert_noad_at_front(16);
+	a.insert_noad_at_front(17);
+	a.insert_noad_at_front(18);
+	a.printlist();
+	//a.sortlist();
+	//a.printlist();
+	//a.delete_at_position(0);
+	//a.printlist();
+	//a.delete_at_position(1);
+	//a.printlist();
+	//a.delete_at_position(2);
+	//a.delete_at_position(6);
+	//a.printlist();
+	//a.delete_at_position(7);
+	//a.delete_at_position(8);
+
+	//a.update_value_at_position(0,22);
+	//a.update_value_at_position(2, 22);
+	//a.update_value_at_position(6, 22);
+	//a.update_value_at_position(7, 22);
+	//a.update_value_at_position(8, 22);
+	//a.update_value_at_position(-1, 22);
+	//int pos = a.search_element(8);
+	//if (pos<0)
+	//{
+	//	cout << "element not found" << endl;
+	//}
+	//else
+	//{
+	//	cout << "element found at index = " << pos ;
+	//}
+	//int pos = 1;
+	//int val=a.value_at_position(pos);
+	//cout << "value at position = " << pos << " is " << val << endl;
+	
+	//for (int i = 1; i < 8; i++)// in here i am tryin to elete alternate noads
+	//{
+	//	a.delete_at_position(i);// and it works
+	//}
+	a.delete_at_alternate_position();
+	a.printlist();
+
+	cout << "\nall element  after deletation" << endl;
+	a.delete_all();
+	a.printlist();
+}
