@@ -349,6 +349,24 @@ public:
 			return;
 		}
 	}
+	void delete_duplicate_in_sortedList()
+	{
+		Node* current = head;
+		do
+		{
+			while (current->value == current->next->value)
+			{
+				Node* temp = current->next;
+				current->next = temp->next;
+				delete temp;
+				if (current->next == head)
+				{
+					break;
+				}
+			}
+			current = current->next;
+		} while (current != head);
+	}
 	Clinkedlist() 
 	{
 		head = NULL;
