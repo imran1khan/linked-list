@@ -1,0 +1,318 @@
+//doubly circular linked list
+#include<iostream>
+using namespace std;
+class Node
+{
+public:
+	int value = 0;
+	Node* next = NULL;
+	Node* previous = NULL;
+	Node() {}
+	Node(int value)
+	{
+		this->value = value;
+		this->next = NULL;
+		this->previous = NULL;
+	}
+	~Node() {}
+
+private:
+
+};
+class DClinkedlist:protected Node
+{
+public:
+	void printlist() 
+	{
+		if (head==NULL)
+		{
+			cout << "\nempty list\n";
+			return;
+		}
+		Node* temp = head;
+		cout << "NULL<-";
+		do
+		{
+			cout << temp->value << "->";
+			temp = temp->next;
+		} while (temp!=head);
+		cout << "NULL";
+	}
+	void printlistReverse()
+	{
+		if (head == NULL)
+		{
+			cout << "\nempty list\n";
+			return;
+		}
+		Node* temp = head->previous;
+		cout << "NULL<-";
+		do
+		{
+			cout << temp->value << "->";
+			temp = temp->previous;
+		} while (temp!=head->previous);
+		cout << "NULL";
+	}
+	void insertNode_at_the_biginning(int value)
+	{
+		Node* newnode = new Node();
+		if (head==NULL)
+		{
+			newnode->value = value;
+			head = newnode;
+			head->next = head;
+			head->previous = head;
+			return;
+		}
+		if (head->previous==head)
+		{
+			newnode->value = value;
+			newnode->previous = head->previous;
+			newnode->next = head;
+			head->previous = newnode;
+			head->next = newnode;
+			head = newnode;
+			return;
+		}
+		if (head->previous!=head)
+		{
+			newnode->value = head->value;
+			head->value = value;
+			newnode->next = head->next;
+			head->next = newnode;
+			newnode->previous = head;
+			newnode->next->previous = newnode;
+			return;
+		}
+	}
+	void insert_Node_at_end(int value)
+	{
+		Node* newnode = new Node();
+		if (head==NULL)
+		{
+			newnode->value = value;
+			head = newnode;
+			head->next = head;
+			head->previous = head;
+			return;
+		}
+		if (head->next==head)
+		{
+			newnode->value = value;
+			head->next = newnode;
+			newnode->previous = head;
+			head->previous = newnode;
+			newnode->next = head;
+			return;
+		}
+		if (head->next!=head)
+		{
+			newnode->value = value;
+			newnode->next = head;
+			newnode->previous = head->previous;
+			head->previous = newnode;
+			newnode->previous->next = newnode;
+		}
+	}
+	void insertatPosition(int value,int position)
+	{
+		if (head==NULL)
+		{
+			insertNode_at_the_biginning(value);
+			return;
+		}
+		Node* current = head;
+		for (int i = 1; i <= position; i++)
+		{
+			if (i==1 && position==1) 
+			{
+				insertNode_at_the_biginning(value);
+				return;
+			}
+			else
+			{
+				if (i==position-1)
+				{
+					Node* newnode = new Node(value);
+					newnode->next = current->next;
+					current->next = newnode;
+					newnode->previous = current;
+					newnode->next->previous = newnode;
+					return;
+
+				}
+				else
+				{
+					current = current->next;
+					if (current==head)
+					{
+						return;
+					}
+				}
+			}
+		}
+	}
+	void deleteFirstNode() 
+	{
+		if (head==NULL)
+		{
+			return;
+		}
+		if (head->next==head)
+		{
+			Node* temp = head;
+			head = NULL;
+			delete temp;
+			return;
+		}
+		Node* temp2 = head;
+		Node* prevofhead = temp2->previous;
+		head = head->next;
+		head->previous = prevofhead;
+		prevofhead->next = head;
+		delete temp2;
+	}
+	void deleteLastNode()
+	{
+		if (head==NULL)
+		{
+			return;
+		}
+		if (head->previous==head)
+		{
+			Node* temp = head;
+			head = NULL;
+			delete temp;
+			return;
+		}
+		Node* previousofhead = head->previous;
+		head->previous = previousofhead->previous;
+		previousofhead->previous->next = head;
+		delete previousofhead;
+	}
+	void delete_at_position(int position)
+	{
+		if (head==NULL)
+		{
+			return;
+		}
+		Node* current = head->next;
+		Node* ptrprevious = head;
+		for (int i = 1; i <= position; i++)
+		{
+			if (i==1 && position==1)
+			{
+				deleteFirstNode();
+				return;
+			}
+			else
+			{
+				if (i==position-1)
+				{
+					ptrprevious->next = current->next;
+					current->next->previous = ptrprevious;
+					delete current;
+					return;
+				}
+				else
+				{
+					current = current->next;
+					if (current==head)
+					{
+						return;
+					}
+					ptrprevious = ptrprevious->next;
+				}
+			}
+		}
+	}
+	void sortlist()
+	{
+		if (head==NULL)
+		{
+			return;
+		}
+		if (head->next==head)
+		{
+			return;
+		}
+		Node* currentptr = head->next;
+		Node* previousptr = head;
+		do
+		{
+			do
+			{
+				if(previousptr->value < currentptr->value)
+				{
+					swap(previousptr->value, currentptr->value);
+				}
+				currentptr = currentptr->next;
+			} while (currentptr!=head);
+			previousptr = previousptr->next;
+		} while (previousptr!=head);
+	}
+	void reverseLinkedlist() 
+	{
+		if (head==NULL  || head->next==head)
+		{
+			return;
+		}
+		Node* current = head;
+		Node* temp=NULL;
+		do
+		{
+			temp = current->previous;
+			current->previous = current->next;
+			current->next = temp;
+			current = current->previous;
+		} while (current!=head);
+		head = temp->previous;
+	}
+	DClinkedlist()
+	{
+		this->head = NULL;
+	}
+	~DClinkedlist(){}
+
+private:
+	Node* head = NULL;
+};
+
+int main() 
+{
+	DClinkedlist a;
+	//for (int i = 1; i <= 5; i++)
+	//{
+	//	a.insertNode_at_the_biginning(i);
+	//}
+	//for (int i = 5; i >= 1; i--)
+	//{
+	//	a.insertNode_at_the_biginning(i);
+	//}
+	//a.insertNode_at_the_biginning(1); // test for only one Node
+	//for (int i = 1; i <= 5; i++)
+	//{
+	//	a.insert_Node_at_end(i);
+	//}
+	for (int i = 5; i >= 1; i--)
+	{
+		a.insert_Node_at_end(i);
+	}
+	//a.insert_Node_at_end(1);
+	//a.insert_Node_at_end(2);
+	a.printlist();
+	//a.deleteFirstNode();
+	//a.deleteLastNode();
+	//a.deleteLastNode();
+	cout << endl;
+	//a.insertatPosition(22,3);
+	//a.delete_at_position(5);
+	//a.deleteFirstNode();
+	//a.deleteLastNode();
+	//a.sortlist();
+	a.reverseLinkedlist();
+	a.printlist();
+	//cout << "\nreverse\n";
+	//a.printlistReverse();
+}
