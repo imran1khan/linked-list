@@ -205,6 +205,28 @@ public:
 		head = newhead;
 		//head = swaptemp->previous;// i did't understand this one
 	}
+	void delete_duplicate_in_sortedList()
+	{
+		Node* current = head;
+		while (current != NULL)
+		{
+			while (current->value == current->next->value)
+			{
+				Node* temp = current->next;
+				current->next = temp->next;
+				if (temp->next!=NULL)
+				{
+					temp->next->previous = current;
+				}
+				delete temp;
+				if (current->next==NULL)
+				{
+					break;
+				}
+			}
+			current = current->next;
+		}
+	}
 	Dlinkedlist () 
 	{
 		this->head = NULL;
